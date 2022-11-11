@@ -54,18 +54,11 @@ function install_python {
 
 # awsctl インストール
 function install_awsctl {
-    # github アクセストークン入力
-    export GITHUB_ACCESS_TOKEN
-    if [ -z "${GITHUB_ACCESS_TOKEN:-}" ]; then
-        read -sp 'INFO: require github access token: ' GITHUB_ACCESS_TOKEN
-        echo '' # 入力完了を示す echo
-    fi
-    
     python -m pip install boto3
     python -m pip install pybase62
     ln -nfs mrolab-python ${HOME}/mrolab
-    git_clone "mro-lab/mrolab-python" "1.2.mro" "${GITHUB_ACCESS_TOKEN}" ${HOME}/mrolab-python
-    git_clone "mro-lab/awsctl" "2.0.mro" "${GITHUB_ACCESS_TOKEN}" ${HOME}/awsctl
+    git_clone "mro-lab/mrolab-python" "1.2.mro" $(github_access_token) ${HOME}/mrolab-python
+    git_clone "mro-lab/awsctl" "2.0.mro" $(github_access_token) ${HOME}/awsctl
 }
 
 # 全部設定
@@ -75,6 +68,15 @@ function all {
     install_python
     install_awsctl
     echo "please 'exit' once for .bashrc reload."
+}
+
+# github アクセストークン取得：なければ要求する
+function github_access_token {
+    if [ -z "${GITHUB_ACCESS_TOKEN:-}" ]; then
+        read -sp 'INFO: require github access token: ' GITHUB_ACCESS_TOKEN
+        echo '' # 入力完了を示す echo
+    fi
+    echo "${GITHUB_ACCESS_TOKEN:-}"
 }
 
 # 使い方
@@ -90,6 +92,7 @@ case "${ARGP[0]:-}" in
     install_bashrc)         install_bashrc      "${ARGP[@]:1}" ;;   # bashrc インストール
     install_python)         install_python      "${ARGP[@]:1}" ;;   # python インストール
     install_awsctl)         install_awsctl      "${ARGP[@]:1}" ;;   # awsctl インストール
+    github_access_token)    github_access_token "${ARGP[@]:1}" ;;   # github アクセストークン取得：なければ要求する
     all)                    all                 "${ARGP[@]:1}" ;;   # 全部設定
     *)                      usage                              ;;   # 使い方
 esac
