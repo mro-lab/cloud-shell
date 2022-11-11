@@ -49,6 +49,8 @@ function install_python {
         ./configure --enable-optimizations --prefix=${HOME}/python
         make install
         ln -nfs python3 ${HOME}/python/bin/python
+        rm -rf ${HOME}/Python-${version}		# 容量削減のため削除
+        rm -rf ${HOME}/Python-${version}.tgz	# 容量削減のため削除
     )
 }
 
