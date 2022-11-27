@@ -56,8 +56,9 @@ function install_python {
 
 # awsctl インストール
 function install_awsctl {
-    python -m pip install boto3
-    python -m pip install pybase62
+    ${HOME}/python/bin/python -m pip install boto3
+    ${HOME}/python/bin/python -m pip install pybase62
+    source ${BASH_HOME}/github_access_token
     ln -nfs mrolab-python ${HOME}/mrolab
     git_clone "mro-lab/mrolab-python" "1.2.mro" $(github_access_token) ${HOME}
     git_clone "mro-lab/awsctl" "2.0.mro" $(github_access_token) ${HOME}
@@ -94,7 +95,7 @@ case "${ARGP[0]:-}" in
     install_bashrc)         install_bashrc      "${ARGP[@]:1}" ;;   # bashrc インストール
     install_python)         install_python      "${ARGP[@]:1}" ;;   # python インストール
     install_awsctl)         install_awsctl      "${ARGP[@]:1}" ;;   # awsctl インストール
-    github_access_token)    github_access_token "${ARGP[@]:1}" ;;   # github アクセストークン取得：なければ要求する
     all)                    all                 "${ARGP[@]:1}" ;;   # 全部設定
+    github_access_token)    github_access_token "${ARGP[@]:1}" ;;   # github アクセストークン取得：なければ要求する
     *)                      usage                              ;;   # 使い方
 esac
