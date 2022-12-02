@@ -60,8 +60,8 @@ function install_awsctl {
     ${HOME}/python/bin/python -m pip install pybase62
     source ${BASH_HOME}/github_access_token
     ln -nfs mrolab-python ${HOME}/mrolab
-    git_clone "mro-lab/mrolab-python" "1.2.mro" $(github_access_token) ${HOME}
-    git_clone "mro-lab/awsctl" "2.0.mro" $(github_access_token) ${HOME}
+    git_clone "mro-lab/mrolab-python" "${HOME}/mrolab-python" "1.2" "$(github_access_token)"
+    git_clone "mro-lab/awsctl" "${HOME}/awsctl" "2.0" "$(github_access_token)"
 }
 
 # 全部設定
