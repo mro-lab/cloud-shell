@@ -14,8 +14,7 @@ TOOL_HOME=$(realpath "${TOOL_HOME:-${BASH_HOME}/..}")
 if ! [ -d "${HOME}/mrolab-shell" ]; then
     git clone "https://github.com/mro-lab/mrolab-shell" -b 2.1
 fi 
-source ${HOME}/mrolab-shell/lib/argp.shm
-source ${HOME}/mrolab-shell/lib/git.shm
+source ${HOME}/mrolab-shell/bin/import
 
 # 引数解析
 argp "${@}"
@@ -41,6 +40,11 @@ function install_bashrc {
 # python インストール
 function install_python {
     local version="${1:-3.9.6}"
+    
+    if ${HOME}/python/bin/python --version | grep "${version}"; then
+        echo "pytohn installed."
+        return 0
+    fi
     (
         cd ${HOME}
         wget "https://www.python.org/ftp/python/${version}/Python-${version}.tgz" -O "Python-${version}.tgz"
@@ -58,10 +62,10 @@ function install_python {
 function install_awsctl {
     ${HOME}/python/bin/python -m pip install boto3
     ${HOME}/python/bin/python -m pip install pybase62
-    source ${BASH_HOME}/github_access_token
+    source ${BASH_HOME}/github_credential
     ln -nfs mrolab-python ${HOME}/mrolab
-    git_clone "${HOME}/mrolab-python" "mro-lab/mrolab-python" "1.2" "$(github_access_token)"
-    git_clone "${HOME}/awsctl" "mro-lab/awsctl" "2.0" "$(github_access_token)"
+    git_clone "${HOME}/mrolab-python" "mro-lab/mrolab-python" "1.2" "${GITHUB_CREDENTIAL}"
+    git_clone "${HOME}/awsctl" "mro-lab/awsctl" "2.0" "${GITHUB_CREDENTIAL}"
 }
 
 # 全部設定
@@ -71,15 +75,6 @@ function all {
     install_python
     install_awsctl
     echo "please 'exit' once for .bashrc reload."
-}
-
-# github アクセストークン取得：なければ要求する
-function github_access_token {
-    if [ -z "${GITHUB_ACCESS_TOKEN:-}" ]; then
-        read -sp 'INFO: require github access token: ' GITHUB_ACCESS_TOKEN
-        echo '' # 入力完了を示す echo
-    fi
-    echo "${GITHUB_ACCESS_TOKEN:-}"
 }
 
 # 使い方
@@ -96,6 +91,5 @@ case "${ARGP[0]:-}" in
     install_python)         install_python      "${ARGP[@]:1}" ;;   # python インストール
     install_awsctl)         install_awsctl      "${ARGP[@]:1}" ;;   # awsctl インストール
     all)                    all                 "${ARGP[@]:1}" ;;   # 全部設定
-    github_access_token)    github_access_token "${ARGP[@]:1}" ;;   # github アクセストークン取得：なければ要求する
     *)                      usage                              ;;   # 使い方
 esac
