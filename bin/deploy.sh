@@ -12,7 +12,7 @@ TOOL_HOME=$(realpath "${TOOL_HOME:-${BASH_HOME}/..}")
 #-------------------------------------
 # 環境初期化
 if ! [ -d "${HOME}/mrolab-shell" ]; then
-    git clone "https://github.com/mro-lab/mrolab-shell" -b 2.1
+    git clone "https://github.com/mro-lab/mrolab-shell" -b 2.2.mro
 fi 
 source ${HOME}/mrolab-shell/bin/import
 
